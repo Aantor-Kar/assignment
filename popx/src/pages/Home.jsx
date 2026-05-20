@@ -11,6 +11,12 @@ function Home() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    // Prefetch auth pages so button navigation feels instant.
+    import("./Signin.jsx");
+    import("./Signup.jsx");
+  }, []);
+
   return (
     <div className="w-screen h-screen bg-[#f5f5f5] flex items-center justify-center overflow-hidden">
       <div className="w-full md:w-[400px] h-screen bg-[#f7f7f7] border border-gray-300 relative p-6 mb-10">

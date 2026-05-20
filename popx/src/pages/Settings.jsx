@@ -18,8 +18,10 @@ const Settings = () => {
     }
 
     const loadUser = async () => {
+      const hasLocalUser = Boolean(authStorage.getUser());
+
       try {
-        const data = await getCurrentUser();
+        const data = await getCurrentUser({ force: !hasLocalUser });
         authStorage.saveUser(data.user);
         setUser(data.user);
         setRefreshError("");
