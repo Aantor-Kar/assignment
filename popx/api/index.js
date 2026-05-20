@@ -77,11 +77,12 @@ app.post("/api/auth/signup", async (req, res) => {
 
     return res.status(201).json(createSession(user));
   } catch (error) {
+    console.error("Signup error:", error);
     if (error.code === 11000) {
       return res.status(409).json({ message: "An account with this email already exists." });
     }
 
-    return res.status(500).json({ message: "Could not create your account. Please try again." });
+    return res.status(500).json({ message: "Could not create your account. Please try again.", error: error.message });
   }
 });
 
@@ -117,18 +118,32 @@ app.get("/api/auth/me", requireAuth, (req, res) => {
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) return;
+  if (isConnected) {
+    return;
+  }
 
-  await mongoose.connect(mongoUri, {
-    serverSelectionTimeoutMS: 5000,
-  });
+  try {
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000,
+    });
 
-  isConnected = true;
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    throw error;
+  }
 };
 
 app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Database connection failed",
+      error: error.message,
+    });
+  }
 });
-
 export default app;
