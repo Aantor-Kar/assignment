@@ -114,8 +114,21 @@ app.get("/auth/me", requireAuth, (req, res) => {
   res.json({ user: req.user.toPublicJSON() });
 });
 
-mongoose.connect(mongoUri, {
-  serverSelectionTimeoutMS: 5000,
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+
+  await mongoose.connect(mongoUri, {
+    serverSelectionTimeoutMS: 5000,
+  });
+
+  isConnected = true;
+};
+
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
 });
 
 export default app;
