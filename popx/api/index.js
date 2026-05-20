@@ -38,7 +38,7 @@ const createSession = (user) => ({
   user: user.toPublicJSON(),
 });
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
     database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
