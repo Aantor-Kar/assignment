@@ -45,7 +45,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.post("/auth/signup", async (req, res) => {
+app.post("/api/auth/signup", async (req, res) => {
   try {
     const { fullName, phone, email, password, companyName = "", isAgency = true } = req.body;
 
@@ -85,7 +85,7 @@ app.post("/auth/signup", async (req, res) => {
   }
 });
 
-app.post("/auth/signin", async (req, res) => {
+app.post("/api/auth/signin", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -106,11 +106,11 @@ app.post("/auth/signin", async (req, res) => {
   }
 });
 
-app.post("/auth/logout", (req, res) => {
+app.post("/api/auth/logout", (req, res) => {
   res.json({ ok: true });
 });
 
-app.get("/auth/me", requireAuth, (req, res) => {
+app.get("/api/auth/me", requireAuth, (req, res) => {
   res.json({ user: req.user.toPublicJSON() });
 });
 
