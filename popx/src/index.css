@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+* {
+  margin-top: 1px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#settings {
+  margin: 5px;
+  padding: 5px;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+}
