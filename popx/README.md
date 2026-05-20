@@ -1,16 +1,55 @@
-# React + Vite
+# PopX (Frontend + Backend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project contains:
 
-Currently, two official plugins are available:
+- A React + Vite frontend in `src/`
+- An Express + MongoDB API in `api/`
+- Vercel configuration for static frontend + serverless API deployment
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Local Development
 
-## React Compiler
+1. Install dependencies:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+2. Create `.env` from `.env.example` and fill in real values.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3. Run backend:
+
+```bash
+npm run server
+```
+
+4. Run frontend (in another terminal):
+
+```bash
+npm run dev
+```
+
+Frontend runs on `http://localhost:5173` and API on `http://localhost:5000`.
+
+## Environment Variables
+
+Set these in `.env` (local) and in Vercel Project Settings (production):
+
+- `MONGO_URI`: MongoDB connection string
+- `JWT_SECRET`: strong random string for signing JWTs
+- `CLIENT_ORIGIN`: comma-separated allowed frontend origins (for CORS), e.g. `https://your-app.vercel.app`
+- `VITE_API_URL`: API base URL for frontend, keep `/api` for same-domain deployment
+- `PORT`: local API port (optional on Vercel)
+
+## Deploy To Vercel
+
+1. Push this repository to GitHub.
+2. Import the project in Vercel.
+3. Add production environment variables listed above.
+4. Deploy.
+
+`vercel.json` is configured to:
+
+- Build frontend static assets (`dist/`)
+- Deploy `api/index.js` as a serverless function
+- Route `/api/*` requests to the API
+- Route non-API paths to `index.html` for SPA navigation

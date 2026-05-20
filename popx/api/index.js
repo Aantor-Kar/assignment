@@ -38,6 +38,33 @@ const createSession = (user) => ({
   user: user.toPublicJSON(),
 });
 
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) return;
+
+  try {
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    isConnected = true;
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    throw error;
+  }
+};
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch {
+    res.status(503).json({ message: "Database connection is unavailable. Please try again." });
+  }
+});
+
 app.get("/api/health", (req, res) => {
   res.json({
     ok: true,
@@ -115,35 +142,12 @@ app.get("/api/auth/me", requireAuth, (req, res) => {
   res.json({ user: req.user.toPublicJSON() });
 });
 
-let isConnected = false;
+// LOCAL DEVELOPMENT
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
 
-const connectDB = async () => {
-  if (isConnected) {
-    return;
-  }
-
-  try {
-    await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
-    });
-
-    isConnected = true;
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("MongoDB connection error:", error);
-    throw error;
-  }
-};
-
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    return res.status(500).json({
-      message: "Database connection failed",
-      error: error.message,
-    });
-  }
-});
+// VERCEL
 export default app;
