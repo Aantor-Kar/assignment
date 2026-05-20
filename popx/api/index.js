@@ -4,8 +4,6 @@ import cors from "cors";
 import express from "express";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { requireAuth } from "./middleware/auth.js";
 import User from "./models/User.js";
 
@@ -13,8 +11,6 @@ const app = express();
 const port = process.env.PORT || 5000;
 const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/popx";
 const jwtSecret = process.env.JWT_SECRET || "popx-dev-secret";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const allowedOrigins = (process.env.CLIENT_ORIGIN || "")
   .split(",")
   .map((origin) => origin.trim())
